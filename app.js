@@ -1,12 +1,15 @@
 //jshint esversion:6
 
 // requiring all packages
+require('dotenv').config()
 const express  = require("express");
 const bodyParser = require("body-parser");
 const ejs  = require("ejs");
 const mongoose = require("mongoose");
 const encrypt = require('mongoose-encryption');
 const app  = express();
+
+
 
 // to use staticfiles
 app.use(express.static("public"));
@@ -15,11 +18,11 @@ app.set('view engine', 'ejs');
 //to use bodyparser
 app.use(bodyParser.urlencoded({extended:true}));
 
-
+ 
 //connecting mongodb database
 mongoose.connect("mongodb://localhost:27017/userDB", {UseNewUrlParser: true});
 
-// creating schema
+// creating schema 
 const userSchema = new mongoose.Schema ({
 
     email : String,
@@ -28,8 +31,8 @@ const userSchema = new mongoose.Schema ({
 });
 
 //encrypting
-const secret  = "Thisisourlittlesecret.";
-userSchema.plugin(encrypt,{secret: secret, encryptedFields: ['password']});
+
+userSchema.plugin(encrypt,{secret: process.env.SECRET , encryptedFields: ['password']});
 
 
 //creating model from schema
